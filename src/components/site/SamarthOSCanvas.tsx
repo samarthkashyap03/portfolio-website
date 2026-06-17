@@ -447,7 +447,7 @@ export function SamarthOSCanvas() {
               </svg>
 
               {/* LEVEL 2 Hover Mini-Dashboards (Z-Index fix, pointer-events managed, absolute inline) */}
-              <div className="absolute inset-0 z-30 pointer-events-none overflow-visible">
+              <div className="hidden md:block absolute inset-0 z-30 pointer-events-none overflow-visible">
                 <AnimatePresence>
                   {hoveredNode && (
                     <motion.div

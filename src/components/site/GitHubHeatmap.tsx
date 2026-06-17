@@ -268,85 +268,87 @@ export function GitHubHeatmap({ compact = false }: { compact?: boolean }) {
         </div>
 
         {/* ── Body: heatmap + stats side-by-side ── */}
-        <div className="relative z-10 flex gap-6 items-start">
+        <div className="relative z-10 flex flex-col lg:flex-row gap-6 items-stretch lg:items-start">
           {/* Heatmap — fills remaining width */}
           <div
-            className={`flex-1 min-w-0 transition-opacity duration-700 ${loading ? "opacity-30" : "opacity-100"}`}
+            className={`flex-1 min-w-0 overflow-x-auto pb-2 scrollbar-thin transition-opacity duration-700 ${loading ? "opacity-30" : "opacity-100"}`}
           >
-            {error && !loading && (
-              <div className="flex items-center justify-center h-20 text-muted-foreground text-xs font-mono">
-                Unable to load — view on GitHub
-              </div>
-            )}
-
-            {/* Month labels */}
-            <div className="flex gap-1 mb-1.5">
-              {weeks.map((_, i) => {
-                const ml = monthLabels.find((m) => m.col === i);
-                return (
-                  <div
-                    key={i}
-                    className="flex-1 font-mono text-[8px] text-muted-foreground/70 text-center"
-                  >
-                    {ml?.label ?? ""}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Week columns — flex-1 + aspect-square = fills width */}
-            <div className="flex gap-1 w-full">
-              {weeks.map((week, wi) => (
-                <div
-                  key={wi}
-                  className="flex-1 flex flex-col gap-1"
-                  style={{
-                    opacity: mounted ? 1 : 0,
-                    transform: mounted ? "none" : "translateY(5px)",
-                    transition: `opacity 0.4s ease ${wi * 14}ms,transform 0.4s ease ${wi * 14}ms`,
-                  }}
-                >
-                  {week.map((cell, di) => {
-                    if (!cell) return <div key={di} className="w-full aspect-square opacity-0" />;
-                    const isToday = cell.date === todayStr;
-                    const isFuture = cell.date > todayStr;
-                    return (
-                      <div
-                        key={di}
-                        className={[
-                          "w-full aspect-square rounded-sm border transition-all duration-150 cursor-default hover:scale-[1.6] hover:z-10",
-                          isFuture ? "opacity-20" : "",
-                          isToday ? "ring-2 ring-offset-[2px] ring-offset-card ring-accent" : "",
-                          cell.level === 0
-                            ? "bg-foreground/[0.05] dark:bg-white/[0.04] border-transparent"
-                            : "",
-                          cell.level === 1
-                            ? "bg-accent/25 border-accent/25 hover:shadow-[0_0_6px_color-mix(in_oklab,var(--color-accent)_30%,transparent)]"
-                            : "",
-                          cell.level === 2
-                            ? "bg-accent/50 border-accent/50 hover:shadow-[0_0_8px_color-mix(in_oklab,var(--color-accent)_45%,transparent)]"
-                            : "",
-                          cell.level === 3
-                            ? "bg-accent/82 border-accent/70 shadow-[0_0_4px_color-mix(in_oklab,var(--color-accent)_25%,transparent)]"
-                            : "",
-                          cell.level === 4
-                            ? "bg-gradient-to-br from-accent to-cyan-400 border-cyan-400/50 shadow-[0_0_10px_color-mix(in_oklab,var(--color-accent)_50%,transparent)]"
-                            : "",
-                        ]
-                          .filter(Boolean)
-                          .join(" ")}
-                        onMouseEnter={() => setHovered(cell)}
-                        onMouseLeave={() => setHovered(null)}
-                      />
-                    );
-                  })}
+            <div className="min-w-[560px]">
+              {error && !loading && (
+                <div className="flex items-center justify-center h-20 text-muted-foreground text-xs font-mono">
+                  Unable to load — view on GitHub
                 </div>
-              ))}
+              )}
+
+              {/* Month labels */}
+              <div className="flex gap-1 mb-1.5">
+                {weeks.map((_, i) => {
+                  const ml = monthLabels.find((m) => m.col === i);
+                  return (
+                    <div
+                      key={i}
+                      className="flex-1 font-mono text-[8px] text-muted-foreground/70 text-center"
+                    >
+                      {ml?.label ?? ""}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Week columns — flex-1 + aspect-square = fills width */}
+              <div className="flex gap-1 w-full">
+                {weeks.map((week, wi) => (
+                  <div
+                    key={wi}
+                    className="flex-1 flex flex-col gap-1"
+                    style={{
+                      opacity: mounted ? 1 : 0,
+                      transform: mounted ? "none" : "translateY(5px)",
+                      transition: `opacity 0.4s ease ${wi * 14}ms,transform 0.4s ease ${wi * 14}ms`,
+                    }}
+                  >
+                    {week.map((cell, di) => {
+                      if (!cell) return <div key={di} className="w-full aspect-square opacity-0" />;
+                      const isToday = cell.date === todayStr;
+                      const isFuture = cell.date > todayStr;
+                      return (
+                        <div
+                          key={di}
+                          className={[
+                            "w-full aspect-square rounded-sm border transition-all duration-150 cursor-default hover:scale-[1.6] hover:z-10",
+                            isFuture ? "opacity-20" : "",
+                            isToday ? "ring-2 ring-offset-[2px] ring-offset-card ring-accent" : "",
+                            cell.level === 0
+                              ? "bg-foreground/[0.05] dark:bg-white/[0.04] border-transparent"
+                              : "",
+                            cell.level === 1
+                              ? "bg-accent/25 border-accent/25 hover:shadow-[0_0_6px_color-mix(in_oklab,var(--color-accent)_30%,transparent)]"
+                              : "",
+                            cell.level === 2
+                              ? "bg-accent/50 border-accent/50 hover:shadow-[0_0_8px_color-mix(in_oklab,var(--color-accent)_45%,transparent)]"
+                              : "",
+                            cell.level === 3
+                              ? "bg-accent/82 border-accent/70 shadow-[0_0_4px_color-mix(in_oklab,var(--color-accent)_25%,transparent)]"
+                              : "",
+                            cell.level === 4
+                              ? "bg-gradient-to-br from-accent to-cyan-400 border-cyan-400/50 shadow-[0_0_10px_color-mix(in_oklab,var(--color-accent)_50%,transparent)]"
+                              : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
+                          onMouseEnter={() => setHovered(cell)}
+                          onMouseLeave={() => setHovered(null)}
+                        />
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* ── Stats column — right side ── */}
-          <div className="shrink-0 w-[130px] flex flex-col gap-4 py-1">
+          <div className="shrink-0 w-full lg:w-[130px] grid grid-cols-2 lg:flex lg:flex-col gap-3 lg:gap-4 py-1">
             {statItems.map(({ label, value, icon: Icon, color }) => (
               <div
                 key={label}

@@ -1,7 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useEffect, useState, useRef, type ReactNode } from "react";
-import { Sun, Moon, Github } from "lucide-react";
-import { motion } from "framer-motion";
+import { Sun, Moon, Github, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { SKOS } from "./InteractiveComponents";
 
 const navItems = [
@@ -53,6 +53,7 @@ function ThemeToggle() {
 export function SiteNav() {
   const location = useLocation();
   const [activeSection, setActiveSection] = useState("home");
+  const [isOpen, setIsOpen] = useState(false);
   const isClickScrolling = useRef(false);
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -208,8 +209,47 @@ export function SiteNav() {
             <Github className="size-4 transition-transform group-hover:scale-110 group-hover:rotate-12" />
           </a>
           <ThemeToggle />
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex items-center justify-center rounded-full p-1.5 text-foreground/60 transition-all hover:text-foreground hover:bg-secondary cursor-pointer md:hidden"
+            aria-label="Toggle navigation menu"
+          >
+            {isOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+          </button>
         </div>
       </div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mt-3 flex flex-col gap-1 rounded-2xl border border-border bg-background/95 backdrop-blur-md p-4 shadow-xl md:hidden overflow-hidden"
+          >
+            {navItems.map((item) => {
+              const isActive = activeSection === item.hash && location.pathname === "/";
+              return (
+                <Link
+                  key={item.hash}
+                  to="/"
+                  hash={item.hash}
+                  onClick={() => {
+                    handleNavClick(item.hash);
+                    setIsOpen(false);
+                  }}
+                  className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer border ${
+                    isActive
+                      ? "bg-accent/10 border-accent/20 text-accent"
+                      : "border-transparent text-foreground/75 hover:bg-secondary/40 hover:text-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
