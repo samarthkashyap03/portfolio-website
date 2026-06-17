@@ -199,9 +199,21 @@ const BEYOND_CARDS: BeyondCardData[] = [
 
 function BeyondCard({ card }: { card: BeyondCardData }) {
   const Icon = card.icon;
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   return (
     <div
+      onClick={() => isMobile && setIsRevealed(!isRevealed)}
       className={[
         "group relative min-h-[340px] overflow-hidden rounded-3xl",
         "border border-border dark:border-white/[0.25]",
@@ -209,6 +221,7 @@ function BeyondCard({ card }: { card: BeyondCardData }) {
         "transition-all duration-500 cursor-default select-none",
         "beyond-card-glow",
         card.hoverBorder,
+        isMobile ? "cursor-pointer animate-entrance" : "",
       ].join(" ")}
       style={
         {
@@ -283,7 +296,7 @@ function BeyondCard({ card }: { card: BeyondCardData }) {
             animationDelay: `${card.delay + 300}ms`,
           }}
         >
-          Hover to reveal ↑
+          {isMobile ? "Tap to reveal ↑" : "Hover to reveal ↑"}
         </span>
       </div>
 
@@ -291,7 +304,8 @@ function BeyondCard({ card }: { card: BeyondCardData }) {
       <div
         className={[
           "absolute inset-0 z-20 flex flex-col justify-end overflow-hidden",
-          "translate-y-full group-hover:translate-y-0",
+          isRevealed ? "translate-y-0" : "translate-y-full",
+          "group-hover:translate-y-0",
           "transition-transform duration-[420ms] ease-[cubic-bezier(0.4,0,0.2,1)]",
           `bg-card/[0.96] dark:bg-background/[0.96] backdrop-blur-2xl`,
           card.revealBorderTop,
@@ -573,12 +587,12 @@ function StoryDeck() {
         </span>
 
         {/* Navigation tabs with Sliding Active Pill */}
-        <div className="flex gap-2 p-1.5 border border-border/80 bg-secondary/40 dark:bg-white/[0.04] rounded-xl w-fit relative">
+        <div className="grid grid-cols-3 gap-1 md:flex md:gap-2 p-1.5 border border-border/80 bg-secondary/40 dark:bg-white/[0.04] rounded-xl w-full md:w-fit relative">
           {slides.map((slide, idx) => (
             <button
               key={idx}
               onClick={() => setActiveTab(idx)}
-              className="relative px-4.5 py-2.5 rounded-lg text-xs md:text-sm font-bold transition-all cursor-pointer font-mono whitespace-nowrap z-10"
+              className="relative w-full md:w-auto text-center px-2 py-2.5 md:px-4.5 md:py-2.5 rounded-lg text-[10px] md:text-sm font-bold transition-all cursor-pointer font-mono whitespace-nowrap z-10"
             >
               {activeTab === idx && (
                 <motion.div

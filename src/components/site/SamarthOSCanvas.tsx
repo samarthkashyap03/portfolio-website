@@ -43,6 +43,33 @@ interface OSNode {
 export function SamarthOSCanvas() {
   const [hoveredNode, setHoveredNode] = useState<NodeId | null>(null);
   const [activeNode, setActiveNode] = useState<NodeId | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const handleNodeClick = (e: React.MouseEvent, nodeId: NodeId) => {
+    e.stopPropagation();
+    if (isMobile) {
+      if (hoveredNode === nodeId) {
+        // Second tap: open detail view
+        setActiveNode(nodeId === "samarth" ? "products" : nodeId);
+        setHoveredNode(null);
+      } else {
+        // First tap: show hover card
+        setHoveredNode(nodeId);
+      }
+    } else {
+      // Desktop: single click opens detail view
+      setActiveNode(nodeId === "samarth" ? "products" : nodeId);
+    }
+  };
 
   const nodes: OSNode[] = [
     {
@@ -150,6 +177,15 @@ export function SamarthOSCanvas() {
   };
 
   const getHoverCardStyle = (nodeId: NodeId) => {
+    if (isMobile) {
+      return {
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+        width: "calc(100% - 32px)",
+        maxWidth: "295px",
+      };
+    }
     const coords = getNodeCoords(nodeId);
 
     switch (nodeId) {
@@ -243,14 +279,20 @@ export function SamarthOSCanvas() {
                   Samarth.OS Career Graph
                 </span>
               </div>
-              <span className="font-mono text-[11px] sm:text-xs font-bold text-accent bg-accent/15 px-3 py-1 rounded border border-accent/30 whitespace-nowrap shadow-sm self-start sm:self-auto">
-                Hover nodes to inspect · Click to explore details
+              <span className="font-mono text-[11px] sm:text-xs font-bold text-accent bg-accent/15 px-3 py-1 rounded border border-accent/30 shadow-sm self-start sm:self-auto">
+                {isMobile
+                  ? "Tap nodes to inspect · Tap again to explore details"
+                  : "Hover nodes to inspect · Click to explore details"}
               </span>
             </div>
 
             {/* SVG Interactive Canvas */}
             <div className="relative flex-1 min-h-[400px] w-full flex items-center justify-center overflow-visible">
-              <svg className="absolute inset-0 size-full overflow-visible" viewBox="0 0 500 460">
+              <svg
+                className="absolute inset-0 size-full overflow-visible"
+                viewBox="0 0 500 460"
+                onClick={() => setHoveredNode(null)}
+              >
                 {/* Glowing Gradients */}
                 <defs>
                   <filter id="glow-heavy" x="-30%" y="-30%" width="160%" height="160%">
@@ -310,9 +352,9 @@ export function SamarthOSCanvas() {
                 {/* Central OS Node (Now Larger with Hover Support & Ambient Glow) */}
                 <g
                   className="cursor-pointer"
-                  onMouseEnter={() => setHoveredNode("samarth")}
-                  onMouseLeave={() => setHoveredNode(null)}
-                  onClick={() => setActiveNode("products")}
+                  onMouseEnter={() => !isMobile && setHoveredNode("samarth")}
+                  onMouseLeave={() => !isMobile && setHoveredNode(null)}
+                  onClick={(e) => handleNodeClick(e, "samarth")}
                 >
                   {/* Glowing pulsing outer circle */}
                   <circle
@@ -376,9 +418,9 @@ export function SamarthOSCanvas() {
                     <g
                       key={node.id}
                       className="cursor-pointer group"
-                      onMouseEnter={() => setHoveredNode(node.id)}
-                      onMouseLeave={() => setHoveredNode(null)}
-                      onClick={() => setActiveNode(node.id)}
+                      onMouseEnter={() => !isMobile && setHoveredNode(node.id)}
+                      onMouseLeave={() => !isMobile && setHoveredNode(null)}
+                      onClick={(e) => handleNodeClick(e, node.id)}
                     >
                       {/* Hover outer ring */}
                       <circle
@@ -447,7 +489,7 @@ export function SamarthOSCanvas() {
               </svg>
 
               {/* LEVEL 2 Hover Mini-Dashboards (Z-Index fix, pointer-events managed, absolute inline) */}
-              <div className="hidden md:block absolute inset-0 z-30 pointer-events-none overflow-visible">
+              <div className="absolute inset-0 z-30 pointer-events-none overflow-visible">
                 <AnimatePresence>
                   {hoveredNode && (
                     <motion.div
@@ -460,8 +502,22 @@ export function SamarthOSCanvas() {
                         borderColor: activeHoverNodeColor,
                         boxShadow: `0 0 18px -4px ${activeHoverNodeColor}33, 0 8px 28px -9px rgba(0,0,0,0.5)`,
                       }}
-                      className="absolute w-72 rounded-2xl border bg-card/95 p-5 backdrop-blur-lg pointer-events-none transition-all duration-300"
+                      className="absolute md:w-72 rounded-2xl border bg-card/95 p-5 backdrop-blur-lg pointer-events-auto transition-all duration-300"
+                      onClick={(e) => e.stopPropagation()}
                     >
+                      {isMobile && (
+                        <div className="flex justify-end mb-2 pb-2 border-b border-border/40">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setHoveredNode(null);
+                            }}
+                            className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground hover:text-accent px-2 py-0.5 rounded border border-border bg-secondary/50 cursor-pointer"
+                          >
+                            [ Close Card ]
+                          </button>
+                        </div>
+                      )}
                       {hoveredNode === "samarth" && (
                         <div className="space-y-2.5">
                           <div className="flex items-center justify-between">
