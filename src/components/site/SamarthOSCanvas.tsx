@@ -321,7 +321,7 @@ export function SamarthOSCanvas() {
                           x2={toCoords.x}
                           y2={toCoords.y}
                           className="stroke-accent opacity-30"
-                          strokeWidth="6"
+                          strokeWidth={isMobile ? "8" : "6"}
                         />
                       )}
                       <line
@@ -330,14 +330,14 @@ export function SamarthOSCanvas() {
                         x2={toCoords.x}
                         y2={toCoords.y}
                         strokeDasharray={isHighlighted ? "none" : "4,4"}
-                        strokeWidth={isHighlighted ? 2.5 : 1.2}
+                        strokeWidth={isHighlighted ? (isMobile ? 3.5 : 2.5) : (isMobile ? 1.8 : 1.2)}
                         className={`transition-all duration-300 ${
                           isHighlighted ? "stroke-accent" : "stroke-muted-foreground/40"
                         }`}
                       />
                       {/* Flowing animated dots/packets */}
                       {isHighlighted && (
-                        <circle r="3.5" fill="var(--color-accent)">
+                        <circle r={isMobile ? "5" : "3.5"} fill="var(--color-accent)">
                           <animateMotion
                             dur="1.8s"
                             repeatCount="indefinite"
@@ -360,7 +360,7 @@ export function SamarthOSCanvas() {
                   <circle
                     cx={centerNode.x}
                     cy={centerNode.y}
-                    r="68"
+                    r={isMobile ? "76" : "68"}
                     fill="none"
                     stroke="var(--color-accent)"
                     strokeWidth="2"
@@ -369,7 +369,7 @@ export function SamarthOSCanvas() {
                   <circle
                     cx={centerNode.x}
                     cy={centerNode.y}
-                    r="58"
+                    r={isMobile ? "66" : "58"}
                     fill="var(--color-card)"
                     stroke={
                       hoveredNode === "samarth" ? "var(--color-accent)" : "var(--color-border)"
@@ -386,7 +386,7 @@ export function SamarthOSCanvas() {
                   <circle
                     cx={centerNode.x}
                     cy={centerNode.y}
-                    r="48"
+                    r={isMobile ? "54" : "48"}
                     fill="var(--color-secondary)"
                     className="opacity-95"
                   />
@@ -394,7 +394,7 @@ export function SamarthOSCanvas() {
                     x={centerNode.x}
                     y={centerNode.y - 1}
                     textAnchor="middle"
-                    className="font-sans text-[15px] sm:text-[16px] font-medium fill-foreground tracking-tight"
+                    className="font-sans text-[15px] sm:text-[16px] font-bold fill-foreground tracking-tight"
                   >
                     {centerNode.label}
                   </text>
@@ -426,7 +426,7 @@ export function SamarthOSCanvas() {
                       <circle
                         cx={node.x}
                         cy={node.y}
-                        r={isHovered ? "44" : "35"}
+                        r={isMobile ? (isHovered ? 50 : 42) : (isHovered ? 44 : 35)}
                         fill="transparent"
                         stroke={node.color}
                         strokeWidth="2.5"
@@ -440,7 +440,7 @@ export function SamarthOSCanvas() {
                       <circle
                         cx={node.x}
                         cy={node.y}
-                        r={isHovered ? "38" : "30"}
+                        r={isMobile ? (isHovered ? 42 : 35) : (isHovered ? 38 : 30)}
                         fill="var(--color-card)"
                         stroke={isHovered ? node.color : "var(--color-border)"}
                         strokeWidth={isHovered ? "3" : "2.5"}
@@ -452,16 +452,16 @@ export function SamarthOSCanvas() {
                       />
                       {/* Icon overlay */}
                       <foreignObject
-                        x={node.x - 14}
-                        y={node.y - 14}
-                        width="28"
-                        height="28"
+                        x={isMobile ? node.x - 18 : node.x - 14}
+                        y={isMobile ? node.y - 18 : node.y - 14}
+                        width={isMobile ? 36 : 28}
+                        height={isMobile ? 36 : 28}
                         className="pointer-events-none transition-all duration-300"
                         style={{ opacity: isOtherHovered ? 0.25 : 1 }}
                       >
                         <div className="flex size-full items-center justify-center">
                           <Icon
-                            className="size-6 transition-transform duration-300 group-hover:scale-110"
+                            className={isMobile ? "size-7 transition-transform duration-300 group-hover:scale-110" : "size-6 transition-transform duration-300 group-hover:scale-110"}
                             style={{ color: isHovered ? node.color : "var(--color-foreground)" }}
                           />
                         </div>
@@ -469,13 +469,13 @@ export function SamarthOSCanvas() {
                       {/* Label Text (Larger & Higher Contrast) */}
                       <text
                         x={node.x}
-                        y={node.y + 52}
+                        y={node.y + (isMobile ? 60 : 52)}
                         textAnchor="middle"
                         className="font-sans text-[14px] sm:text-[15px] transition-all duration-300 fill-foreground drop-shadow-md"
                         style={{
                           opacity: isOtherHovered ? 0.25 : 1,
                           fill: isHovered ? node.color : "var(--color-foreground)",
-                          fontWeight: isHovered ? 800 : 500,
+                          fontWeight: isMobile || isHovered ? 800 : 500,
                           textShadow: isHovered
                             ? `0 0 10px ${node.color}, 0 0 2px ${node.color}`
                             : "none",
@@ -492,287 +492,319 @@ export function SamarthOSCanvas() {
               <div className="absolute inset-0 z-30 pointer-events-none overflow-visible">
                 <AnimatePresence>
                   {hoveredNode && (
-                    <motion.div
-                      key={hoveredNode}
-                      initial={{ opacity: 0, y: 10, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.96 }}
-                      style={{
-                        ...getHoverCardStyle(hoveredNode),
-                        borderColor: activeHoverNodeColor,
-                        boxShadow: `0 0 18px -4px ${activeHoverNodeColor}33, 0 8px 28px -9px rgba(0,0,0,0.5)`,
-                      }}
-                      className="absolute md:w-72 rounded-2xl border bg-card/95 p-5 backdrop-blur-lg pointer-events-auto transition-all duration-300"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <>
                       {isMobile && (
-                        <div className="flex justify-end mb-2 pb-2 border-b border-border/40">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setHoveredNode(null);
-                            }}
-                            className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground hover:text-accent px-2 py-0.5 rounded border border-border bg-secondary/50 cursor-pointer"
-                          >
-                            [ Close Card ]
-                          </button>
-                        </div>
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm pointer-events-auto"
+                          onClick={() => setHoveredNode(null)}
+                        />
                       )}
-                      {hoveredNode === "samarth" && (
-                        <div className="space-y-2.5">
-                          <div className="flex items-center justify-between">
-                            <span className="font-sans text-[11px] font-bold text-accent uppercase tracking-wider flex items-center gap-1">
-                              <Sparkles className="size-3 animate-spin" /> About Me
-                            </span>
-                            <span className="font-sans text-[11px] text-emerald-400 font-bold">
-                              Active
-                            </span>
+                      <motion.div
+                        key={hoveredNode}
+                        initial={isMobile ? { opacity: 0, scale: 0.9, y: 20 } : { opacity: 0, y: 10, scale: 0.96 }}
+                        animate={isMobile ? { opacity: 1, scale: 1, y: 0 } : { opacity: 1, y: 0, scale: 1 }}
+                        exit={isMobile ? { opacity: 0, scale: 0.9, y: 20 } : { opacity: 0, y: 10, scale: 0.96 }}
+                        style={
+                          isMobile
+                            ? {
+                                position: "fixed",
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                                bottom: 0,
+                                margin: "auto",
+                                height: "fit-content",
+                                width: "calc(100% - 32px)",
+                                maxWidth: "320px",
+                                borderColor: activeHoverNodeColor,
+                                boxShadow: `0 0 24px -4px ${activeHoverNodeColor}44, 0 12px 40px -10px rgba(0,0,0,0.6)`,
+                                zIndex: 50,
+                              }
+                            : {
+                                ...getHoverCardStyle(hoveredNode),
+                                borderColor: activeHoverNodeColor,
+                                boxShadow: `0 0 18px -4px ${activeHoverNodeColor}33, 0 8px 28px -9px rgba(0,0,0,0.5)`,
+                              }
+                        }
+                        className={
+                          isMobile
+                            ? "rounded-2xl border bg-card/98 p-6 backdrop-blur-lg pointer-events-auto"
+                            : "absolute md:w-72 rounded-2xl border bg-card/95 p-5 backdrop-blur-lg pointer-events-auto transition-all duration-300"
+                        }
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {isMobile && (
+                          <div className="flex justify-end mb-2 pb-2 border-b border-border/40">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setHoveredNode(null);
+                              }}
+                              className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground hover:text-accent px-2 py-0.5 rounded border border-border bg-secondary/50 cursor-pointer"
+                            >
+                              [ Close Card ]
+                            </button>
                           </div>
-                          <h4 className="font-sans text-base font-extrabold text-foreground">
-                            Samarth Kashyap
-                          </h4>
-                          <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
-                            <li>
-                              Build full-stack applications bridging backend, AI, and automation.
-                            </li>
-                            <li>Design clean APIs, database schemas, and background workers.</li>
-                            <li>Experiment with hardware prototyping and custom IoT firmware.</li>
-                          </ul>
-                        </div>
-                      )}
-
-                      {hoveredNode === "patent" && (
-                        <div className="space-y-2.5">
-                          <div className="flex items-center justify-between">
-                            <span className="font-sans text-[11px] font-bold text-purple-400 uppercase tracking-wider">
-                              Patent Granted
-                            </span>
-                            <span className="font-sans text-[11px] text-muted-foreground">
-                              IN 710119106
-                            </span>
-                          </div>
-                          <h4 className="font-sans text-base font-extrabold text-foreground">
-                            MEDCONNECT
-                          </h4>
-                          <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
-                            <li>
-                              Granted Indian Patent No. 710119106 for an autonomous medicine kiosk.
-                            </li>
-                            <li>
-                              Secured institutional funding to build and deploy the physical device.
-                            </li>
-                            <li>
-                              Connects ESP8266 controller, stepper motors, and mobile app via cloud.
-                            </li>
-                          </ul>
-                          <div className="flex flex-wrap gap-1 pt-1">
-                            {["C++", "Arduino", "ESP8266", "PID Control"].map((tech) => (
-                              <span
-                                key={tech}
-                                className="rounded bg-purple-400/10 px-2 py-0.5 font-sans text-[10px] text-purple-300 font-bold border border-purple-400/20"
-                              >
-                                {tech}
+                        )}
+                        {hoveredNode === "samarth" && (
+                          <div className="space-y-2.5">
+                            <div className="flex items-center justify-between">
+                              <span className="font-sans text-[11px] font-bold text-accent uppercase tracking-wider flex items-center gap-1">
+                                <Sparkles className="size-3 animate-spin" /> About Me
                               </span>
-                            ))}
+                              <span className="font-sans text-[11px] text-emerald-400 font-bold">
+                                Active
+                              </span>
+                            </div>
+                            <h4 className="font-sans text-base font-extrabold text-foreground">
+                              Samarth Kashyap
+                            </h4>
+                            <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
+                              <li>
+                                Build full-stack applications bridging backend, AI, and automation.
+                              </li>
+                              <li>Design clean APIs, database schemas, and background workers.</li>
+                              <li>Experiment with hardware prototyping and custom IoT firmware.</li>
+                            </ul>
                           </div>
-                        </div>
-                      )}
+                        )}
 
-                      {hoveredNode === "ai" && (
-                        <div className="space-y-2.5">
-                          <div className="flex items-center justify-between">
-                            <span className="font-sans text-[11px] font-bold text-blue-400 uppercase tracking-wider">
-                              How I Think
-                            </span>
-                            <span className="font-sans text-[11px] text-emerald-400 font-bold">
-                              Systems
-                            </span>
+                        {hoveredNode === "patent" && (
+                          <div className="space-y-2.5">
+                            <div className="flex items-center justify-between">
+                              <span className="font-sans text-[11px] font-bold text-purple-400 uppercase tracking-wider">
+                                Patent Granted
+                              </span>
+                              <span className="font-sans text-[11px] text-muted-foreground">
+                                IN 710119106
+                              </span>
+                            </div>
+                            <h4 className="font-sans text-base font-extrabold text-foreground">
+                              MEDCONNECT
+                            </h4>
+                            <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
+                              <li>
+                                Granted Indian Patent No. 710119106 for an autonomous medicine kiosk.
+                              </li>
+                              <li>
+                                Secured institutional funding to build and deploy the physical device.
+                              </li>
+                              <li>
+                                Connects ESP8266 controller, stepper motors, and mobile app via cloud.
+                              </li>
+                            </ul>
+                            <div className="flex flex-wrap gap-1 pt-1">
+                              {["C++", "Arduino", "ESP8266", "PID Control"].map((tech) => (
+                                <span
+                                  key={tech}
+                                  className="rounded bg-purple-400/10 px-2 py-0.5 font-sans text-[10px] text-purple-300 font-bold border border-purple-400/20"
+                                >
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
                           </div>
-                          <h4 className="font-sans text-base font-extrabold text-foreground">
-                            How do I build intelligent systems?
-                          </h4>
-                          <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
-                            <li>Build deterministic AI systems and RAG pipelines from scratch.</li>
-                            <li>
-                              Use pgvector semantic search and background queues for document
-                              parsing.
-                            </li>
-                            <li>
-                              Prevent hallucinations by enforcing strict text verification bounds.
-                            </li>
-                          </ul>
-                        </div>
-                      )}
+                        )}
 
-                      {hoveredNode === "software" && (
-                        <div className="space-y-2.5">
-                          <div className="flex items-center justify-between">
-                            <span className="font-sans text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
-                              How I Engineer
-                            </span>
-                            <span className="font-sans text-[11px] text-emerald-400 font-bold">
-                              Production
-                            </span>
+                        {hoveredNode === "ai" && (
+                          <div className="space-y-2.5">
+                            <div className="flex items-center justify-between">
+                              <span className="font-sans text-[11px] font-bold text-blue-400 uppercase tracking-wider">
+                                How I Think
+                              </span>
+                              <span className="font-sans text-[11px] text-emerald-400 font-bold">
+                                Systems
+                              </span>
+                            </div>
+                            <h4 className="font-sans text-base font-extrabold text-foreground">
+                              How do I build intelligent systems?
+                            </h4>
+                            <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
+                              <li>Build deterministic AI systems and RAG pipelines from scratch.</li>
+                              <li>
+                                Use pgvector semantic search and background queues for document
+                                parsing.
+                              </li>
+                              <li>
+                                Prevent hallucinations by enforcing strict text verification bounds.
+                              </li>
+                            </ul>
                           </div>
-                          <h4 className="font-sans text-base font-extrabold text-foreground">
-                            How do I build production apps?
-                          </h4>
-                          <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
-                            <li>
-                              Ship type-safe web applications with fast initial page load times.
-                            </li>
-                            <li>
-                              Build high-performance backend endpoints using FastAPI and PostgreSQL.
-                            </li>
-                            <li>
-                              Implement asynchronous tasks with Celery and Redis to handle heavy
-                              loads.
-                            </li>
-                          </ul>
-                        </div>
-                      )}
+                        )}
 
-                      {hoveredNode === "germany" && (
-                        <div className="space-y-2.5">
-                          <div className="flex items-center justify-between">
-                            <span className="font-sans text-[11px] font-bold text-cyan-400 uppercase tracking-wider">
-                              Education
-                            </span>
-                            <span className="font-sans text-[11px] text-muted-foreground">
-                              Kaiserslautern
-                            </span>
+                        {hoveredNode === "software" && (
+                          <div className="space-y-2.5">
+                            <div className="flex items-center justify-between">
+                              <span className="font-sans text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
+                                How I Engineer
+                              </span>
+                              <span className="font-sans text-[11px] text-emerald-400 font-bold">
+                                Production
+                              </span>
+                            </div>
+                            <h4 className="font-sans text-base font-extrabold text-foreground">
+                              How do I build production apps?
+                            </h4>
+                            <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
+                              <li>
+                                Ship type-safe web applications with fast initial page load times.
+                              </li>
+                              <li>
+                                Build high-performance backend endpoints using FastAPI and PostgreSQL.
+                              </li>
+                              <li>
+                                Implement asynchronous tasks with Celery and Redis to handle heavy
+                                loads.
+                              </li>
+                            </ul>
                           </div>
-                          <h4 className="font-sans text-base font-extrabold text-foreground">
-                            M.Sc. at RPTU
-                          </h4>
-                          <div className="flex items-center gap-1.5 font-sans text-[11px] text-muted-foreground">
-                            <span>India</span>
-                            <ArrowRight className="size-2.5 text-cyan-400" />
-                            <span>RPTU</span>
-                            <ArrowRight className="size-2.5 text-cyan-400" />
-                            <span className="text-cyan-400 font-bold">Germany</span>
-                          </div>
-                          <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
-                            <li>Pursuing M.Sc. in Computer Science at RPTU Kaiserslautern.</li>
-                            <li>Specializing in Software Engineering and Intelligent Systems.</li>
-                            <li>
-                              Deepening understanding of software architecture and scalable systems.
-                            </li>
-                          </ul>
-                        </div>
-                      )}
+                        )}
 
-                      {hoveredNode === "leadership" && (
-                        <div className="space-y-2.5">
-                          <div className="flex items-center justify-between">
-                            <span className="font-sans text-[11px] font-bold text-rose-400 uppercase tracking-wider">
-                              Team Leadership
-                            </span>
-                            <span className="font-sans text-[11px] text-rose-400 font-bold">
-                              Active Lead
-                            </span>
+                        {hoveredNode === "germany" && (
+                          <div className="space-y-2.5">
+                            <div className="flex items-center justify-between">
+                              <span className="font-sans text-[11px] font-bold text-cyan-400 uppercase tracking-wider">
+                                Education
+                              </span>
+                              <span className="font-sans text-[11px] text-muted-foreground">
+                                Kaiserslautern
+                              </span>
+                            </div>
+                            <h4 className="font-sans text-base font-extrabold text-foreground">
+                              M.Sc. at RPTU
+                            </h4>
+                            <div className="flex items-center gap-1.5 font-sans text-[11px] text-muted-foreground">
+                              <span>India</span>
+                              <ArrowRight className="size-2.5 text-cyan-400" />
+                              <span>RPTU</span>
+                              <ArrowRight className="size-2.5 text-cyan-400" />
+                              <span className="text-cyan-400 font-bold">Germany</span>
+                            </div>
+                            <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
+                              <li>Pursuing M.Sc. in Computer Science at RPTU Kaiserslautern.</li>
+                              <li>Specializing in Software Engineering and Intelligent Systems.</li>
+                              <li>
+                                Deepening understanding of software architecture and scalable systems.
+                              </li>
+                            </ul>
                           </div>
-                          <h4 className="font-sans text-base font-extrabold text-foreground">
-                            Teaching & Teams
-                          </h4>
-                          <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
-                            <li>
-                              Led a 10-member team building hardware at international robotics
-                              contests.
-                            </li>
-                            <li>
-                              Mentored 30+ students during Python & object-oriented programming
-                              bootcamps.
-                            </li>
-                            <li>
-                              Founded and organized startup workshops for the college
-                              entrepreneurship club.
-                            </li>
-                          </ul>
-                        </div>
-                      )}
+                        )}
 
-                      {hoveredNode === "products" && (
-                        <div className="space-y-2.5">
-                          <div className="flex items-center justify-between">
-                            <span className="font-sans text-[11px] font-bold text-purple-400 uppercase tracking-wider">
-                              Why I Build
-                            </span>
-                            <span className="font-sans text-[11px] text-muted-foreground">
-                              Solutions
-                            </span>
+                        {hoveredNode === "leadership" && (
+                          <div className="space-y-2.5">
+                            <div className="flex items-center justify-between">
+                              <span className="font-sans text-[11px] font-bold text-rose-400 uppercase tracking-wider">
+                                Team Leadership
+                              </span>
+                              <span className="font-sans text-[11px] text-rose-400 font-bold">
+                                Active Lead
+                              </span>
+                            </div>
+                            <h4 className="font-sans text-base font-extrabold text-foreground">
+                              Teaching & Teams
+                            </h4>
+                            <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
+                              <li>
+                                Led a 10-member team building hardware at international robotics
+                                contests.
+                              </li>
+                              <li>
+                                Mentored 30+ students during Python & object-oriented programming
+                                bootcamps.
+                              </li>
+                              <li>
+                                Founded and organized startup workshops for the college
+                                entrepreneurship club.
+                              </li>
+                            </ul>
                           </div>
-                          <h4 className="font-sans text-base font-extrabold text-foreground">
-                            What problems did I solve?
-                          </h4>
-                          <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
-                            <li>
-                              Ship clean SaaS applications that solve real-world daily bottlenecks.
-                            </li>
-                            <li>
-                              Built Lumen (AI-powered reading assistant) and Effortless (writing
-                              verification).
-                            </li>
-                            <li>Focused on lightweight, privacy-first tools with instant value.</li>
-                          </ul>
-                        </div>
-                      )}
+                        )}
 
-                      {hoveredNode === "automation" && (
-                        <div className="space-y-2.5">
-                          <div className="flex items-center justify-between">
-                            <span className="font-sans text-[11px] font-bold text-amber-400 uppercase tracking-wider">
-                              Automation Systems
-                            </span>
-                            <span className="font-sans text-[11px] text-muted-foreground">
-                              College Result Automator
-                            </span>
+                        {hoveredNode === "products" && (
+                          <div className="space-y-2.5">
+                            <div className="flex items-center justify-between">
+                              <span className="font-sans text-[11px] font-bold text-purple-400 uppercase tracking-wider">
+                                Why I Build
+                              </span>
+                              <span className="font-sans text-[11px] text-muted-foreground">
+                                Solutions
+                              </span>
+                            </div>
+                            <h4 className="font-sans text-base font-extrabold text-foreground">
+                              What problems did I solve?
+                            </h4>
+                            <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
+                              <li>
+                                Ship clean SaaS applications that solve real-world daily bottlenecks.
+                              </li>
+                              <li>
+                                Built Lumen (AI-powered reading assistant) and Effortless (writing
+                                verification).
+                              </li>
+                              <li>Focused on lightweight, privacy-first tools with instant value.</li>
+                            </ul>
                           </div>
-                          <h4 className="font-sans text-base font-extrabold text-foreground">
-                            VTU Result Automation & Scrapers
-                          </h4>
-                          <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
-                            <li>
-                              Wrote Python scripts to scrape college portals and automate grade
-                              formatting.
-                            </li>
-                            <li>
-                              Replaced manual data entry for staff, reducing processing time by 90%.
-                            </li>
-                            <li>
-                              Built API integrations for automated lead-generation data processing.
-                            </li>
-                          </ul>
-                        </div>
-                      )}
+                        )}
 
-                      {hoveredNode === "robotics" && (
-                        <div className="space-y-2.5">
-                          <div className="flex items-center justify-between">
-                            <span className="font-sans text-[11px] font-bold text-pink-400 uppercase tracking-wider">
-                              Robotics arm
-                            </span>
-                            <span className="font-sans text-[11px] text-pink-400 font-bold">
-                              Technoxian
-                            </span>
+                        {hoveredNode === "automation" && (
+                          <div className="space-y-2.5">
+                            <div className="flex items-center justify-between">
+                              <span className="font-sans text-[11px] font-bold text-amber-400 uppercase tracking-wider">
+                                Automation Systems
+                              </span>
+                              <span className="font-sans text-[11px] text-muted-foreground">
+                                College Result Automator
+                              </span>
+                            </div>
+                            <h4 className="font-sans text-base font-extrabold text-foreground">
+                              VTU Result Automation & Scrapers
+                            </h4>
+                            <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
+                              <li>
+                                Wrote Python scripts to scrape college portals and automate grade
+                                formatting.
+                              </li>
+                              <li>
+                                Replaced manual data entry for staff, reducing processing time by 90%.
+                              </li>
+                              <li>
+                                Built API integrations for automated lead-generation data processing.
+                              </li>
+                            </ul>
                           </div>
-                          <h4 className="font-sans text-base font-extrabold text-foreground">
-                            Robotics & Firmware
-                          </h4>
-                          <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
-                            <li>
-                              Secured 3rd place at JITHACK 2023 with a WiFi-controlled robotic arm.
-                            </li>
-                            <li>
-                              Developed custom C++ firmware on Arduino and ESP8266 microcontrollers.
-                            </li>
-                            <li>
-                              Programmed PID feedback loops to stabilize high-speed mobile robots.
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-                    </motion.div>
+                        )}
+
+                        {hoveredNode === "robotics" && (
+                          <div className="space-y-2.5">
+                            <div className="flex items-center justify-between">
+                              <span className="font-sans text-[11px] font-bold text-pink-400 uppercase tracking-wider">
+                                Robotics arm
+                              </span>
+                              <span className="font-sans text-[11px] text-pink-400 font-bold">
+                                Technoxian
+                              </span>
+                            </div>
+                            <h4 className="font-sans text-base font-extrabold text-foreground">
+                              Robotics & Firmware
+                            </h4>
+                            <ul className="list-disc pl-4 space-y-1 text-[13px] text-foreground/90 font-medium leading-relaxed font-sans">
+                              <li>
+                                Secured 3rd place at JITHACK 2023 with a WiFi-controlled robotic arm.
+                              </li>
+                              <li>
+                                Developed custom C++ firmware on Arduino and ESP8266 microcontrollers.
+                              </li>
+                              <li>
+                                Programmed PID feedback loops to stabilize high-speed mobile robots.
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                      </motion.div>
+                    </>
                   )}
                 </AnimatePresence>
               </div>
