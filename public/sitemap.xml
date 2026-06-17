@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://samarthkashyap.dev/</loc>
+    <loc>https://samarthkashyap.tech/</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://samarthkashyap.dev/projects</loc>
+    <loc>https://samarthkashyap.tech/projects</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://samarthkashyap.dev/projects/lumen</loc>
+    <loc>https://samarthkashyap.tech/projects/lumen</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://samarthkashyap.dev/projects/effortless</loc>
+    <loc>https://samarthkashyap.tech/projects/effortless</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://samarthkashyap.dev/projects/medconnect</loc>
+    <loc>https://samarthkashyap.tech/projects/medconnect</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://samarthkashyap.dev/projects/vtu-automation</loc>
+    <loc>https://samarthkashyap.tech/projects/vtu-automation</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://samarthkashyap.dev/projects/tracely</loc>
+    <loc>https://samarthkashyap.tech/projects/tracely</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://samarthkashyap.dev/blog/going-from-zero-to-shipped</loc>
+    <loc>https://samarthkashyap.tech/blog/going-from-zero-to-shipped</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://samarthkashyap.dev/blog/notes-on-building-reliable-ai-apps</loc>
+    <loc>https://samarthkashyap.tech/blog/notes-on-building-reliable-ai-apps</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

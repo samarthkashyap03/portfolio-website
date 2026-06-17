@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://samarthkashyap.dev/sitemap.xml
+Sitemap: https://samarthkashyap.tech/sitemap.xml

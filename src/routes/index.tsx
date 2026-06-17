@@ -1463,7 +1463,7 @@ function Index() {
             "@type": "WebSite",
             name: "Samarth Kashyap",
             alternateName: "Samarth's Digital Canvas",
-            url: "https://samarthkashyap.dev",
+            url: "https://samarthkashyap.tech",
           }),
         }}
       />
