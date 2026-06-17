@@ -5,11 +5,9 @@ import {
   createRootRouteWithContext,
   useRouter,
   HeadContent,
-  Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect } from "react";
 
-import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -73,122 +71,17 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Samarth Kashyap — Software Engineer & AI Systems Builder" },
-      {
-        name: "description",
-        content:
-          "MSc Computer Science student in Kaiserslautern building AI agent applications, distributed backends, and complete products from scratch.",
-      },
-      { name: "author", content: "Samarth Kashyap" },
-      {
-        name: "keywords",
-        content:
-          "Samarth Kashyap, software engineer, RPTU Kaiserslautern, AI agent, pgvector, full-stack, distributed backends, IoT, Germany, computer science student, portfolio, developer",
-      },
-      { property: "og:title", content: "Samarth Kashyap — Software Engineer & AI Systems Builder" },
-      {
-        property: "og:description",
-        content:
-          "AI agent systems, backend, and product engineering. Projects, writing, and an AI chat trained on my work.",
-      },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://samarthkashyap.dev/" },
-      { property: "og:site_name", content: "Samarth Kashyap" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      {
-        rel: "preconnect",
-        href: "https://fonts.gstatic.com",
-        crossOrigin: "anonymous",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap",
-      },
-    ],
-  }),
-  shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
-
-function RootShell({ children }: { children: ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              name: "Samarth Kashyap",
-              url: "https://samarthkashyap.dev",
-              image: "https://samarthkashyap.dev/assets/portrait.jpg",
-              jobTitle: "Software Engineer & AI Systems Builder",
-              alumniOf: {
-                "@type": "CollegeOrUniversity",
-                name: "RPTU Kaiserslautern-Landau",
-              },
-              sameAs: [
-                "https://linkedin.com/in/samarthkashyap",
-                "https://github.com/samarthkashyap03",
-              ],
-              knowsAbout: [
-                "Computer Science",
-                "Software Engineering",
-                "Artificial Intelligence",
-                "Full-Stack Development",
-                "Cybersecurity",
-                "Internet of Things",
-                "FastAPI",
-                "React",
-                "PostgreSQL",
-                "pgvector",
-              ],
-            }),
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                   document.documentElement.classList.add('dark');
-                } else {
-                   document.documentElement.classList.remove('dark');
-                }
-              } catch (_) {}
-            `,
-          }}
-        />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      <HeadContent />
       <Outlet />
     </QueryClientProvider>
   );
