@@ -1519,7 +1519,7 @@ function Index() {
                 </div>
 
                 {/* Clean modern info capsules (Moved from footer) */}
-                <div className="flex flex-wrap items-center gap-2 pt-1 pb-2 text-[11px] sm:text-xs font-mono overflow-visible w-full">
+                <div className="flex flex-wrap md:flex-nowrap items-center gap-2 pt-1 pb-2 text-[11px] sm:text-xs font-mono overflow-visible w-full">
                   <span className="flex shrink-0 whitespace-nowrap items-center gap-1.5 rounded-full border border-emerald-500/30 dark:border-emerald-500/50 bg-emerald-500/10 dark:bg-emerald-500/15 px-3 py-1.5 font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 hover:scale-105 hover:-translate-y-0.5 transition-all cursor-default select-none shadow-[0_0_8px_rgba(16,185,129,0.12)] hover:shadow-[0_0_14px_rgba(16,185,129,0.25)]">
                     <span className="relative flex size-2">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />

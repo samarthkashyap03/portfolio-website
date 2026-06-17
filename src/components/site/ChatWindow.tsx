@@ -39,6 +39,74 @@ function mockReply(prompt: string): string {
   return "I can answer questions about Samarth's projects (Lumen, Effortless, MedConnect), his stack, his patent, what he's learning, or how to reach him. Try one of the suggestions below.";
 }
 
+// Helper to parse basic markdown lists and bolding for chat responses
+function renderMessageContent(content: string) {
+  const lines = content.split("\n");
+  
+  return (
+    <div className="space-y-1.5 text-left">
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        if (trimmed === "") {
+          return <div key={idx} className="h-1.5" />;
+        }
+
+        // Check if it's a bullet point (starts with '-' or '*' or '•' or '●')
+        const isBullet = trimmed.startsWith("- ") || trimmed.startsWith("* ") || trimmed.startsWith("• ") || trimmed.startsWith("● ");
+        // Check if it's a numbered point (starts with digit followed by dot and space)
+        const isNumbered = /^\d+\.\s/.test(trimmed);
+
+        let displayLine = line;
+        if (isBullet) {
+          displayLine = trimmed.substring(2);
+        } else if (isNumbered) {
+          const match = trimmed.match(/^\d+\.\s(.*)/);
+          displayLine = match ? match[1] : trimmed;
+        }
+
+        // Helper to parse inline bolding (**text**)
+        const parts = displayLine.split(/(\*\*.*?\*\*)/g);
+        const parsedElements = parts.map((part, pIdx) => {
+          if (part.startsWith("**") && part.endsWith("**")) {
+            return (
+              <strong key={pIdx} className="font-extrabold text-white dark:text-foreground">
+                {part.slice(2, -2)}
+              </strong>
+            );
+          }
+          return part;
+        });
+
+        if (isBullet) {
+          return (
+            <div key={idx} className="flex items-start gap-2 pl-1 mt-0.5">
+              <span className="text-violet-400 mt-2 shrink-0 select-none text-[6px]">●</span>
+              <span className="flex-1 text-sm md:text-[15px] leading-relaxed text-foreground/90">{parsedElements}</span>
+            </div>
+          );
+        }
+
+        if (isNumbered) {
+          const numMatch = trimmed.match(/^(\d+)/);
+          const num = numMatch ? numMatch[1] : "1";
+          return (
+            <div key={idx} className="flex items-start gap-2 pl-1 mt-0.5">
+              <span className="font-mono text-xs font-bold text-violet-400 mt-0.5 shrink-0 select-none">{num}.</span>
+              <span className="flex-1 text-sm md:text-[15px] leading-relaxed text-foreground/90">{parsedElements}</span>
+            </div>
+          );
+        }
+
+        return (
+          <p key={idx} className="text-sm md:text-[15px] leading-relaxed text-foreground/95">
+            {parsedElements}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 export function ChatWindow({
   variant = "page",
   showSuggestions = true,
@@ -211,7 +279,7 @@ export function ChatWindow({
                   : "max-w-[85%] rounded-2xl rounded-tl-sm bg-white/5 border border-violet-500/20 dark:border-violet-400/15 px-4 py-3 text-sm md:text-base leading-relaxed text-foreground transition-all hover:bg-white/10"
               }
             >
-              {m.content}
+              {renderMessageContent(m.content)}
             </div>
           </div>
         ))}

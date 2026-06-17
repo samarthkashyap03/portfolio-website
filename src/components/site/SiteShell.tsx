@@ -1,6 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useEffect, useState, useRef, type ReactNode } from "react";
-import { Sun, Moon, Github, Menu, X } from "lucide-react";
+import { Sun, Moon, Github, Linkedin, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SKOS } from "./InteractiveComponents";
 
@@ -207,6 +207,15 @@ export function SiteNav() {
             title="GitHub"
           >
             <Github className="size-4 transition-transform group-hover:scale-110 group-hover:rotate-12" />
+          </a>
+          <a
+            href="https://linkedin.com/in/samarthkashyap"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center justify-center rounded-full p-1.5 text-foreground/60 transition-all hover:text-foreground hover:bg-secondary"
+            title="LinkedIn"
+          >
+            <Linkedin className="size-4 transition-transform group-hover:scale-110 group-hover:-rotate-12" />
           </a>
           <ThemeToggle />
           <button
